@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polling Client</title>
+</head>
+<body>
+    <h1>Polling Client</h1>
+    <button onclick="startLongPolling()">Start Polling</button>
+    <p id="response"></p>
+
+    <script>
+        function startLongPolling() {
+            // Function to make a long polling request
+            function longPoll() {
+                fetch('http://localhost:8081/poll')
+                    .then(response => response.text())
+                    .then(data => {
+                        // Display the response from the server
+                        let responseElement = document.getElementById('response');
+let lineBreak = document.createElement('br'); // Create a <br> element
+let newData = document.createTextNode(data); // Create a text node with the new data
+
+// Append the line break and the new data to the response element
+responseElement.appendChild(lineBreak);
+responseElement.appendChild(newData);
+
+                        // Make the next long polling request
+                        longPoll();
+                    })
+                    .catch(error => {
+                        console.error('Error fetching data:', error);
+                    });
+            }
+            
+            // Start the long polling process
+            longPoll();
+        }
+    </script>
+</body>
+</html>
